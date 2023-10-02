@@ -12,7 +12,7 @@ const resData = {
 const ShowQrCode = () => {
   return (
     <View style={styles.showQrCodeModal}>
-      <QRCode value={JSON.stringify(resData)} size={200} />
+      <QRCode value={'12345'}  />
     </View>
   );
 };
