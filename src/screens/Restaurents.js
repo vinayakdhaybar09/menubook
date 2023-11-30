@@ -1,12 +1,33 @@
-import { StyleSheet, Text, TextInput, View, StatusBar, ScrollView } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  StatusBar,
+  ScrollView,
+} from "react-native";
+import React, { useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import Category from "../components/Category";
 import RestaurentCard from "../components/RestaurentCard";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const Restaurents = () => {
+  const getResData = async () => {
+    const q = query(collection(db, "cities"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+    });
+  };
+
+  useEffect(() => {
+    getResData();
+  }, []);
+
   return (
     <View style={styles.restaurentsContainer}>
       <Text style={styles.logo}>MENUBOOK</Text>
@@ -29,9 +50,8 @@ const Restaurents = () => {
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-
-      <Category/>
-      <RestaurentCard/>
+        <Category />
+        <RestaurentCard />
       </ScrollView>
     </View>
   );
@@ -64,11 +84,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-    marginVertical:20,
+    marginVertical: 20,
   },
   restaurentsSearchBar: {
     shadowColor: "#000",
-    width: "74%" ,
+    width: "74%",
     backgroundColor: "#fff",
     borderRadius: 4,
     elevation: 10,

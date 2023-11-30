@@ -1,24 +1,121 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { Modal } from "react-native-paper";
+import { Modal, RadioButton } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage } from "../config/firebaseConfig";
+import { addDoc, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
-const AddMenuModal = () => {
+const AddMenuModal = ({ resData }) => {
+  const [foodTitle, setFoodTitle] = useState();
+  const [foodType, setFoodType] = useState();
+  const [foodPrice, setFoodPrice] = useState();
+  const [foodDesc, setFoodDesc] = useState();
+  const [image, setImage] = useState(null);
+  const navigation = useNavigation();
+
+  const resName = "kamath";
+
+  const handleAddImg = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result);
+    }
+  };
+
+  const handleAddMenu = async () => {
+    try {
+      if (image != null) {
+        const response = await fetch(image?.assets[0].uri);
+        const blob = await response.blob();
+
+        const uploadRef = ref(storage, `${resData?.resName}/${Date.now()}`);
+        const snapshot = await uploadBytes(uploadRef, blob);
+
+        const url = await getDownloadURL(uploadRef);
+
+        console.log("Image URL:", url);
+
+        // if (resData) {
+        console.log("step 2");
+        const newMenuItem = {
+          foodId: Date.now(),
+          foodTitle: foodTitle,
+          foodPrice: foodPrice,
+          foodType: foodType,
+          foodDesc: foodDesc,
+          foodImg: url,
+        };
+        const docRef = doc(db, "restaurants", "Ap3j6UJcZ2Q4GVOJbdUtE3ZnO2I2");
+        await setDoc(docRef, {
+          foodMenu: arrayUnion(newMenuItem),
+        }).then(() => {
+          console.log("step 3");
+          navigation.navigate("bottomtabs");
+        });
+        // }
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
   return (
-    <View style={styles.addmenuModal}>
-      <TextInput placeholder="Food title" style={styles.inputField} />
-      <TextInput placeholder="Food desc." style={styles.inputField} />
-      <TextInput placeholder="Food price" style={styles.inputField} keyboardType="number-pad" />
-      <TouchableOpacity style={styles.addImageView}>
-        <Ionicons name="image-outline" size={24} color="black" />
-        <Text>+ add image</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.bookBtn}>
-        <Text style={styles.bookBtnText}>Add</Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView>
+      <View style={styles.addmenuModal}>
+        <TextInput
+          placeholder="Food title"
+          style={styles.inputField}
+          onChangeText={(value) => setFoodTitle(value)}
+        />
+        <TextInput
+          placeholder="Food price"
+          style={styles.inputField}
+          keyboardType="number-pad"
+          onChangeText={(value) => setFoodPrice(value)}
+        />
+        <TextInput
+          multiline={true}
+          numberOfLines={2}
+          placeholder="Food desc."
+          onChangeText={(value) => setFoodDesc(value)}
+          style={styles.inputField}
+        />
+        <RadioButton.Group
+          onValueChange={(value) => setFoodType(value)}
+          value={foodType}
+        >
+          <RadioButton.Item label="Veg" value="veg" />
+          <RadioButton.Item label="Non veg" value="nonveg" />
+          <RadioButton.Item label="Both" value="both" />
+        </RadioButton.Group>
+        {image && (
+          <Image
+            source={{ uri: image.assets[0].uri }}
+            style={styles.imgStyle}
+          />
+        )}
+        <TouchableOpacity style={styles.addImageView} onPress={handleAddImg}>
+          <Ionicons name="image-outline" size={24} color="black" />
+          <Text>+ add image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.bookBtn} onPress={handleAddMenu}>
+          <Text style={styles.bookBtnText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -27,6 +124,32 @@ const AddMenu = () => {
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const [resData, setResData] = useState();
+
+  const userUid = "Ap3j6UJcZ2Q4GVOJbdUtE3ZnO2I2";
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const docRef = doc(db, "restaurants", "Ap3j6UJcZ2Q4GVOJbdUtE3ZnO2I2");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap?.exists()) {
+          const data = docSnap?.data();
+          console.log(data);
+          setResData(data);
+        } else {
+          // No user data found with the given UID.
+          console.log("No user data found.");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <View style={styles.addMenuPage}>
       <TouchableOpacity style={styles.backBtn}>
@@ -39,7 +162,7 @@ const AddMenu = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.addMenuBtn} onPress={showModal}>
         <MaterialIcons name="restaurant-menu" size={24} color="black" />
-        <Text style={styles.bookBtnText}>+ add menu</Text>
+        <Text style={styles.addMenuText}>+ add menu </Text>
       </TouchableOpacity>
       <View style={styles.menuCard}>
         <Image
@@ -59,7 +182,7 @@ const AddMenu = () => {
       </View>
 
       <Modal visible={visible} onDismiss={hideModal}>
-        <AddMenuModal />
+        <AddMenuModal resData={resData} />
       </Modal>
     </View>
   );
@@ -144,8 +267,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   bookBtnText: {
-    color: "white",
     textAlign: "center",
+    color: "#fff",
   },
   addImageView: {
     borderStyle: "dashed",
@@ -154,5 +277,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+  },
+  dropDownField: {
+    borderWidth: 1,
+    borderColor: "#514EB6",
+    // zIndex: 100,
+  },
+  addMenuText: {
+    marginTop: 6,
+  },
+  radioBtn: {
+    color: "#000",
+  },
+  imgStyle: {
+    width: 80,
+    height: 80,
   },
 });

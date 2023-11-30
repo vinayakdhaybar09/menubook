@@ -11,114 +11,66 @@ import { Platform } from "react-native";
 
 const MenuComp = () => {
   return (
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-      <View style={styles.menuContainer}>
-        <View style={styles.menuBox}>
-          <Image
-            style={styles.menuImg}
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/1200px-Momo_nepal.jpg",
-            }}
-          />
-          <View style={styles.menuInfoBox}>
-            <View style={styles.menuInfo}>
-              <Text style={styles.menuInfoText}>Momos</Text>
-              <Text style={styles.menuInfoText}>120/-</Text>
-            </View>
-            <TouchableOpacity style={styles.menuAddBtn}>
-              <Text style={styles.menuAddBtnText}>Add + </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.menuBox}>
-          <Image
-            style={styles.menuImg}
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/1200px-Momo_nepal.jpg",
-            }}
-          />
-          <View style={styles.menuInfoBox}>
-            <View style={styles.menuInfo}>
-              <Text style={styles.menuInfoText}>Momos</Text>
-              <Text style={styles.menuInfoText}>120/-</Text>
-            </View>
-            <TouchableOpacity style={styles.menuAddBtn}>
-              <Text style={styles.menuAddBtnText}>Add + </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.menuBox}>
-          <Image
-            style={styles.menuImg}
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/1200px-Momo_nepal.jpg",
-            }}
-          />
-          <View style={styles.menuInfoBox}>
-            <View style={styles.menuInfo}>
-              <Text style={styles.menuInfoText}>Momos</Text>
-              <Text style={styles.menuInfoText}>120/-</Text>
-            </View>
-            <TouchableOpacity style={styles.menuAddBtn}>
-              <Text style={styles.menuAddBtnText}>Add + </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+    <View style={styles.menuCard}>
+      <Image
+        source={{
+          uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/1200px-Momo_nepal.jpg",
+        }}
+        alt="paneer"
+        style={styles.foodImg}
+      />
+      <View style={styles.menuInfo}>
+        <Text style={styles.menuTitle}>Butter panner</Text>
+        <Text style={styles.menuDesc}>
+          lorem sbfcjb cjhdbsc mbssx bg shdj kiqwer
+        </Text>
       </View>
-    </ScrollView>
+      <Text style={styles.menuPrice}>125 /-</Text>
+    </View>
   );
 };
 
 export default MenuComp;
 
 const styles = StyleSheet.create({
-  menuContainer: {
+  menuCard: {
+    width: "100%",
     flexDirection: "row",
-    paddingHorizontal: 12,
-    marginTop: 20,
-    gap: 20,
-  },
-  menuBox: {
-    borderRadius: 6,
-    width: 200,
-    height:162,
-    padding: 6,
-    backgroundColor: "white",
+    gap: 10,
+    borderRadius: 10,
+    padding: 10,
+    // borderWidth:1,
+    backgroundColor: "#fff",
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 4 },
-        shadowColor: "rgba(0, 0, 0, 0.25)",
-        shadowOpacity: 1,
-        shadowRadius: 4,
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
       },
       android: {
-        elevation: 4,
+        elevation: 5,
       },
     }),
   },
-  menuImg: {
-    width: "100%",
-    height: 100,
-    borderRadius:6
+
+  foodImg: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
   },
-  menuInfoBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 8,
+
+  menuInfo: {
+    width: "60%",
   },
-  menuInfoText: {
+  menuPrice: {
+    alignSelf: "center",
+    color: "#514EB6",
+    fontWeight: "500",
+    fontSize: 16,
+  },
+  menuDesc: {
+    color: "#8E8E8E",
     fontSize: 12,
-  },
-  menuAddBtn: {
-    backgroundColor: "#514EB6",
-    borderRadius: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  menuAddBtnText: {
-    color: "white",
   },
 });

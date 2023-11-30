@@ -1,9 +1,17 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { AntDesign, Ionicons, Feather, FontAwesome } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import MenuComp from "../components/MenuComp";
 import ReviewComp from "../components/ReviewComp";
+import { useNavigation } from "@react-navigation/native";
 
 const restaurantDetailInfo = {
   res_no: 1,
@@ -19,6 +27,7 @@ const restaurantDetailInfo = {
 
 const RestaurentInfo = () => {
   const [showFullText, setShowFullText] = useState(false);
+  const navigation = useNavigation();
 
   const toggleShowFullText = () => {
     setShowFullText(!showFullText);
@@ -44,86 +53,84 @@ const RestaurentInfo = () => {
 
   return (
     <View style={styles.restaurentInfoContainer}>
-      <Image
-        source={{ uri: restaurantDetailInfo.uri }}
-        style={styles.restaurentImage}
-      />
-      <View style={styles.restaurentNameBox}>
-        <Text style={styles.restaurentName}>
-          {restaurantDetailInfo.res_name}
-        </Text>
-        <TouchableOpacity style={styles.followBtn} activeOpacity={0.6}>
-          <Image
-            source={require("../../assets/icons/follow.png")}
-            style={styles.followIcon}
-          />
-          <Text style={styles.followIconText}>Follow</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.restaurentInfo}>
-        <View style={styles.restaurentInfoBox}>
-          <AntDesign name="star" size={16} color="#F6C74E" />
-          <Text style={styles.restaurentInfoText}>
-            {restaurantDetailInfo.rating}
+      <ScrollView>
+        <Image
+          source={{ uri: restaurantDetailInfo.uri }}
+          style={styles.restaurentImage}
+        />
+        <View style={styles.restaurentNameBox}>
+          <Text style={styles.restaurentName}>
+            {restaurantDetailInfo.res_name}
           </Text>
+          <TouchableOpacity style={styles.followBtn} activeOpacity={0.6}>
+            <Image
+              source={require("../../assets/icons/follow.png")}
+              style={styles.followIcon}
+            />
+            <Text style={styles.followIconText}>Follow</Text>
+          </TouchableOpacity>
         </View>
-        <Text>|</Text>
-        <View style={styles.restaurentInfoBox}>
-          <Ionicons name="ios-location-outline" size={18} color="#8E8E8E" />
-          <Text style={styles.restaurentInfoText}>
-            {restaurantDetailInfo.lacation}
-          </Text>
+        <View style={styles.restaurentInfo}>
+          <View style={styles.restaurentInfoBox}>
+            <AntDesign name="star" size={16} color="#F6C74E" />
+            <Text style={styles.restaurentInfoText}>
+              {restaurantDetailInfo.rating}
+            </Text>
+          </View>
+          <Text>|</Text>
+          <View style={styles.restaurentInfoBox}>
+            <Ionicons name="ios-location-outline" size={18} color="#8E8E8E" />
+            <Text style={styles.restaurentInfoText}>
+              {restaurantDetailInfo.lacation}
+            </Text>
+          </View>
+          <Text>|</Text>
+          <View style={styles.restaurentInfoBox}>
+            <Feather name="clock" size={16} color="#8E8E8E" />
+            <Text style={styles.restaurentInfoText}>
+              {restaurantDetailInfo.time_status}
+            </Text>
+          </View>
         </View>
-        <Text>|</Text>
-        <View style={styles.restaurentInfoBox}>
-          <Feather name="clock" size={16} color="#8E8E8E" />
-          <Text style={styles.restaurentInfoText}>
-            {restaurantDetailInfo.time_status}
-          </Text>
-        </View>
-      </View>
-      <Text style={styles.restaurentDesc}>{renderText()}</Text>
+        <Text style={styles.restaurentDesc}>{renderText()}</Text>
 
-      <View style={styles.restaurentInfoTag}>
-        <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
-          <View style={styles.restaurentTagIcon}>
-            <FontAwesome name="rupee" size={24} color="#8E8E8E" />
-          </View>
-          <Text style={styles.restaurentTagText}>
-            {restaurantDetailInfo?.price}/-
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
-          <View style={styles.restaurentTagIcon}>
-            <Ionicons name="call-outline" size={24} color="#8E8E8E" />
-          </View>
-          <Text style={styles.restaurentTagText}>Call Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
-          <View style={styles.restaurentTagIcon}>
-            <Feather name="clock" size={24} color="#8E8E8E" />
-          </View>
-          <Text style={styles.restaurentTagText}>Shedule</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
-          <View style={styles.restaurentTagIcon}>
-            <Ionicons name="md-location-outline" size={24} color="#8E8E8E" />
-          </View>
-          <Text style={styles.restaurentTagText}>Map</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.restaurentInfoOpt}>
-        <TouchableOpacity>
-          <Text>Menu</Text>
-        </TouchableOpacity>
-        <Text>|</Text>
-        <TouchableOpacity>
-          <Text>Reviews</Text>
-        </TouchableOpacity>
-      </View>
-      <MenuComp />
-      {/* <ReviewComp/> */}
-      <TouchableOpacity style={styles.bookBtn}>
+        <View style={styles.restaurentInfoTag}>
+          <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
+            <View style={styles.restaurentTagIcon}>
+              <FontAwesome name="rupee" size={24} color="#8E8E8E" />
+            </View>
+            <Text style={styles.restaurentTagText}>
+              {restaurantDetailInfo?.price}/-
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
+            <View style={styles.restaurentTagIcon}>
+              <Ionicons name="call-outline" size={24} color="#8E8E8E" />
+            </View>
+            <Text style={styles.restaurentTagText}>Call Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
+            <View style={styles.restaurentTagIcon}>
+              <Feather name="clock" size={24} color="#8E8E8E" />
+            </View>
+            <Text style={styles.restaurentTagText}>Shedule</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} style={styles.restaurentTagBox}>
+            <View style={styles.restaurentTagIcon}>
+              <Ionicons name="md-location-outline" size={24} color="#8E8E8E" />
+            </View>
+            <Text style={styles.restaurentTagText}>Map</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.restaurentMenuTitle}>Menu</Text>
+        <View style={styles.restaurentMenuView}>
+          <MenuComp />
+        </View>
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.bookBtn}
+        onPress={() => navigation.navigate("booktable")}
+      >
         <Text style={styles.bookBtnText}>Book a table</Text>
       </TouchableOpacity>
     </View>
@@ -143,7 +150,7 @@ const styles = StyleSheet.create({
   restaurentNameBox: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     alignItems: "center",
   },
   restaurentName: {
@@ -171,7 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 12,
     marginBottom: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
   },
   restaurentInfoBox: {
     flexDirection: "row",
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
   },
   restaurentDesc: {
     fontSize: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
   },
   restaurentInfoTag: {
     flexDirection: "row",
@@ -230,14 +237,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#514EB6",
     margin: 12,
     borderRadius: 8,
-    paddingVertical:12,
-    position:"absolute",
-    bottom:0,
-    left:0,
-    right:0
+    paddingVertical: 12,
+    // position: "absolute",
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
   },
-  bookBtnText:{
-    color:"white",
+  bookBtnText: {
+    color: "white",
+    textAlign: "center",
+  },
+  restaurentMenuTitle: {
+    paddingHorizontal: 20,
+    // fontSize: 18,
+    fontWeight: "600",
+    marginTop: 20,
+
+    // paddingVertical:10
     textAlign:"center"
-  }
+  },
+  restaurentMenuView: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
 });
